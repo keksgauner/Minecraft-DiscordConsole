@@ -1,0 +1,6 @@
+name: DiscordConsole
+version: '${project.version}'
+main: de.kleckzz.discordconsole.bungee.DiscordConsole
+authors: [ Keksgauner ]
+description: You are able to send commands to the server
+website: www.kleckzz.de

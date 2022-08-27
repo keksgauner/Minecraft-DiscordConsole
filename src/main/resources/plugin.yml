@@ -1,0 +1,7 @@
+name: DiscordConsole
+version: '${project.version}'
+main: de.kleckzz.discordconsole.bukkit.DiscordConsole
+api-version: 1.13
+authors: [ Keksgauner ]
+description: You are able to send commands to the server
+website: www.kleckzz.de
