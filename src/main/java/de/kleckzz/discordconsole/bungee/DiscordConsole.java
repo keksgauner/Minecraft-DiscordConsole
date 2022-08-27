@@ -33,7 +33,6 @@ public final class DiscordConsole extends Plugin {
         // Plugin shutdown logic
     }
 
-
     private void build(String token) throws LoginException, InterruptedException {
         JDABuilder builder = JDABuilder.createDefault(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.MESSAGE_CONTENT);
 
