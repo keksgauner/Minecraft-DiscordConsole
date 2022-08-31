@@ -1,0 +1,4 @@
+# Set the setup to false if you're finished
+setup: true
+# The name of the server. How it should be listened.
+serverName: "server1"

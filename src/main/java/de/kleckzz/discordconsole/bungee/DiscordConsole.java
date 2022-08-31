@@ -1,8 +1,6 @@
 package de.kleckzz.discordconsole.bungee;
 
-import de.kleckzz.coresystem.bukkit.libraries.plugin.ConfigAccessor;
 import de.kleckzz.coresystem.proxy.libraries.plugin.ConfigAccessorBungee;
-import de.kleckzz.coresystem.proxy.libraries.plugin.JsonAccessorBungee;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -16,7 +14,6 @@ import javax.security.auth.login.LoginException;
 public final class DiscordConsole extends Plugin {
 
     public static Plugin plugin;
-    public static JDA jda;
     public static ConfigAccessorBungee config;
 
     @Override
@@ -33,12 +30,12 @@ public final class DiscordConsole extends Plugin {
         config.saveDefaultConfig();
         plugin.getLogger().info("The config is loaded");
 
-        Boolean setup = config.getConfig().getBoolean("setup");
-        if(setup == true) {
-            plugin.getLogger().warning("You have to setup this plugin");
-            plugin.getLogger().warning("You have to insert the discord token from your bot in the DiscordConsole/config.json from https://discord.com/developers/applications. Don't forget to set setup to false!");
-        } else {
-            String token = config.getConfig().getString("token");
+        if(config.getConfig().getBoolean("setup")) {
+            plugin.getLogger().warning("You have to setup this plugin!");
+            plugin.getLogger().warning("You have to insert the discord token from your bot in the DiscordConsole/config.json.");
+            plugin.getLogger().warning("Look to https://discord.com/developers/applications to get the token. Don't forget to set the setup to false!");
+        } else if(config.getConfig().getBoolean("discord.enabled")) {
+            String token = config.getConfig().getString("discord.token");
             try {
                 startDiscordBot(token);
             } catch (LoginException | InterruptedException e) {
@@ -66,11 +63,11 @@ public final class DiscordConsole extends Plugin {
         builder.setBulkDeleteSplittingEnabled(false);
         builder.setCompression(Compression.NONE);
 
-        builder.setActivity(Activity.watching("Chillt"));
+        builder.setActivity(Activity.watching(config.getConfig().getString("discord.watching")));
 
         builder.addEventListeners(new DiscordEvents());
 
-        jda = builder.build();
+        JDA jda = builder.build();
         jda.awaitReady();
     }
 }

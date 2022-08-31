@@ -1,35 +1,31 @@
 package de.kleckzz.discordconsole.bukkit;
 
-import de.kleckzz.discordconsole.Data;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.Compression;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.Plugin;
+import de.kleckzz.coresystem.bukkit.libraries.plugin.ConfigAccessor;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import javax.security.auth.login.LoginException;
 
 public final class DiscordConsole extends JavaPlugin {
 
-    public static Plugin plugin;
-    public static FileConfiguration fileConfiguration;
-    public static JDA jda;
+    public static JavaPlugin plugin;
+    public static ConfigAccessor config;
 
     @Override
     public void onEnable() {
         plugin = this;
-
-        setConfig();
-
-        try {
-            build(Data.token);
-        } catch (LoginException | InterruptedException e) {
-            throw new RuntimeException(e);
+        plugin.getLogger().info("\u00A7aWelcome to the DiscordConsole plugin");
+        if(plugin.getDescription().getVersion().contains("SNAPSHOT")) {
+            plugin.getLogger().warning("You are running a development version of the plugin, please report any bugs to GitHub.");
         }
+
+        plugin.getLogger().info("I am loading the config. Please wait...");
+        config = new ConfigAccessor(plugin, "server.yml");
+        config.saveDefaultConfig();
+        plugin.getLogger().info("The config is loaded");
+
+        if(config.getConfig().getBoolean("setup") == true) {
+            plugin.getLogger().warning("You have to setup this plugin!");
+        }
+
+        plugin.getLogger().info("\u00A7aThe plugin DiscordConsole finished loading :)");
 
     }
 
@@ -40,11 +36,8 @@ public final class DiscordConsole extends JavaPlugin {
 
 
     private void setConfig() {
-        fileConfiguration = plugin.getConfig();
 
-        // Global info
-        fileConfiguration.set("serverName", "server1");
-
+        /*
         // Discord path
         fileConfiguration.set("discord.enabled", "false");
         fileConfiguration.set("discord.token", "no-token");
@@ -61,21 +54,6 @@ public final class DiscordConsole extends JavaPlugin {
         fileConfiguration.set("socket.client.port", "8081");
 
         plugin.getConfig().setDefaults(fileConfiguration);
-        plugin.saveConfig();
-    }
-
-    private void build(String token) throws LoginException, InterruptedException {
-        JDABuilder builder = JDABuilder.createDefault(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.MESSAGE_CONTENT);
-
-        builder.disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER);
-        builder.setBulkDeleteSplittingEnabled(false);
-        builder.setCompression(Compression.NONE);
-
-        builder.setActivity(Activity.watching("Chillt"));
-
-        builder.addEventListeners(new DiscordEvents());
-
-        jda = builder.build();
-        jda.awaitReady();
+        plugin.saveConfig();*/
     }
 }
