@@ -6,9 +6,7 @@ You can send commands over discord to your Minecraft server or proxy.
 ### IMPORTED: This plugin is only for Minecraft Networks with Bungeecord/Waterfall and Bukkit/Spigot/Paper server
 
 # How to setup
-- Drag and drop this plugin to all your server. 
-- And install the Coresystem: [https://github.com/Kleckzz/KleckzzCoreSystem](KleckzzCoreSystem)
-this is a dependency
+- Drag and drop this plugin to all your server
 - Restart your servers to get the config
 - Setup in the Proxy the config.yml. In the proxy you have to insert your discord token.
 - Set on the Bukkit/Spigot/Paper server a unique server name
