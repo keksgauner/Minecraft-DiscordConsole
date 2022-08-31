@@ -1,3 +1,10 @@
+# If you don't use the Bungeecord features set this true
+discord:
+  enabled: false
+  token: "change me."
+  watching: "The Servers"
+# If you set this above true you can ignore the other stuff under this
+
 # The name of the server. How it should be listened.
 serverName: "server1"
 

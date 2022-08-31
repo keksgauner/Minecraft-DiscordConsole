@@ -148,7 +148,6 @@ public final class DiscordConsole extends Plugin {
 
         builder.setActivity(Activity.watching(config.getConfig().getString("discord.watching")));
 
-        builder.addEventListeners(new DiscordEvents());
         builder.addEventListeners(new AutoCompleteBot());
         builder.addEventListeners(new SlashInteraction());
 
