@@ -1,0 +1,4 @@
+# Set the setup to false if you're finished
+setup: true
+# Set the discord token from https://discord.com/developers/applications
+token: "change me."
