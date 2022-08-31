@@ -38,7 +38,7 @@ public class SlashInteraction extends ListenerAdapter {
                 }
                 command = Objects.requireNonNull(event.getOption("command")).getAsString();
 
-                // Send Command. and so on
+                // TODO: Send Command. and so on
 
                 event.replyEmbeds(
                         getEmbed(member, "The command " + command + " was sent to the server " + server)

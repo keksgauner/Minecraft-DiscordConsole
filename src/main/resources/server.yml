@@ -2,4 +2,13 @@
 serverName: "server1"
 
 # Access token. Paste the token from Proxy here
-trusted-token: "change"
+socket:
+  trusted-token: "change"
+  # By default, the port of the proxy
+  client:
+    address: "localhost"
+    port: 8081
+  # By default a random port
+  server:
+    address: "localhost"
+    port: 0

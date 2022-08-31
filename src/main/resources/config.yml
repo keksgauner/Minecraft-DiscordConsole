@@ -3,4 +3,11 @@ discord:
   enabled: false
   token: "change me."
   watching: "The Servers"
-trusted-token: "generate"
+socket:
+  trusted-token: "generate"
+  client:
+    address: "localhost"
+    port: 8080
+  server:
+    address: "localhost"
+    port: 8081

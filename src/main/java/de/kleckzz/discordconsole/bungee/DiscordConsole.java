@@ -1,9 +1,7 @@
 package de.kleckzz.discordconsole.bungee;
 
 import de.kleckzz.coresystem.proxy.libraries.plugin.ConfigAccessorBungee;
-import de.kleckzz.coresystem.proxy.libraries.plugin.InitializeManager;
 import de.kleckzz.coresystem.proxy.libraries.plugin.channel.PluginChannelProxy;
-import de.kleckzz.discordconsole.bungee.channel.FindServer;
 import de.kleckzz.discordconsole.bungee.discord.AutoCompleteBot;
 import de.kleckzz.discordconsole.bungee.discord.SlashInteraction;
 import net.dv8tion.jda.api.JDA;
@@ -17,8 +15,6 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import javax.security.auth.login.LoginException;
-import java.io.IOException;
-import java.lang.instrument.IllegalClassFormatException;
 import java.security.SecureRandom;
 
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
@@ -27,7 +23,6 @@ public final class DiscordConsole extends Plugin {
 
     public static Plugin plugin;
     public static ConfigAccessorBungee config;
-    public static PluginChannelProxy pluginChannelProxy;
 
     // characters to use to build a token
     private static final String TOKEN_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -49,7 +44,9 @@ public final class DiscordConsole extends Plugin {
                 plugin.getLogger().info("Starting Discord Bot...");
                 String token = config.getConfig().getString("discord.token");
                 startDiscordBot(token);
-                setupPluginChannel();
+
+                // Add first server
+                AutoCompleteBot.addServer(config.getConfig().getString("serverName"));
             } catch (LoginException | InterruptedException e) {
                 if(e.getMessage().contains("The provided token is invalid!")) {
                     config.getConfig().set("discord.enabled", false);
@@ -91,29 +88,10 @@ public final class DiscordConsole extends Plugin {
     }
 
     private void loadToken() {
-        if(config.getConfig().getString("trusted-token").equals("generate")) {
+        if(config.getConfig().getString("socket.trusted-token").equals("generate")) {
             plugin.getLogger().info("I'll create a trusted token just for you!");
-            config.getConfig().set("trusted-token", generateToken());
+            config.getConfig().set("socket.trusted-token", generateToken());
             config.saveConfig();
-        }
-    }
-
-    private void setupPluginChannel() {
-        pluginChannelProxy = new PluginChannelProxy(plugin);
-        pluginChannelProxy.registerOutgoingPluginChannel("dc:cmd");
-        pluginChannelProxy.registerIncomingPluginChannel("dc:feedback");
-
-        InitializeManager.registerEvent(plugin, new FindServer());
-
-        searchServer();
-    }
-
-    private void searchServer() {
-        AutoCompleteBot.addServer(config.getConfig().getString("serverName"));
-        try {
-            FindServer.callServer();
-        } catch (IllegalClassFormatException | IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

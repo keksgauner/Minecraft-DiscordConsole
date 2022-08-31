@@ -1,9 +1,6 @@
 package de.kleckzz.discordconsole.bukkit;
 
 import de.kleckzz.coresystem.bukkit.libraries.plugin.ConfigAccessor;
-import de.kleckzz.coresystem.bukkit.libraries.plugin.InitializeManager;
-import de.kleckzz.coresystem.bukkit.libraries.plugin.chanel.PluginChannelBukkit;
-import de.kleckzz.discordconsole.bukkit.channel.SayHello;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @SuppressWarnings("unused")
@@ -11,7 +8,6 @@ public final class DiscordConsole extends JavaPlugin {
 
     public static JavaPlugin plugin;
     public static ConfigAccessor config;
-    public static PluginChannelBukkit pluginChannelBukkit;
 
     @Override
     public void onEnable() {
@@ -23,7 +19,8 @@ public final class DiscordConsole extends JavaPlugin {
 
         loadConfig();
         if(checkTrustedToken()) {
-            setupPluginChannel();
+            plugin.getLogger().info("Say to the proxy hello!");
+            // TODO: setup client say hello
         }
 
         plugin.getLogger().info("\u00A7aThe plugin DiscordConsole finished loading :)");
@@ -47,19 +44,11 @@ public final class DiscordConsole extends JavaPlugin {
      * @return if this invalid
      */
     private boolean checkTrustedToken() {
-        if(config.getConfig().getString("trusted-token").equals("change")) {
+        if(config.getConfig().getString("socket.trusted-token").equals("change")) {
             plugin.getLogger().warning("You have to setup this plugin!");
             plugin.getLogger().warning("Your trusted token is not setup. You have to copy the token from the proxy!");
             return false;
         }
         return true;
-    }
-
-    private void setupPluginChannel() {
-        pluginChannelBukkit = new PluginChannelBukkit(plugin);
-        pluginChannelBukkit.registerOutgoingPluginChannel("dc:feedback");
-        pluginChannelBukkit.registerIncomingPluginChannel("dc:cmd");
-
-        InitializeManager.registerEvent(plugin, new SayHello());
     }
 }
