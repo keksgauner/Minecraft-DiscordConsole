@@ -9,7 +9,8 @@ You can send commands over discord to your Minecraft server or proxy.
 - And install the Coresystem: [https://github.com/Kleckzz/KleckzzCoreSystem](KleckzzCoreSystem)
   this is a dependency
 - Restart your servers to get the config
-- Setup on the Bukkit/Spigot/Paper Server the server.yml. You have to insert your discord token and set this enabled true
+- Setup on the Bukkit/Spigot/Paper Server the server.yml. 
+- You have to insert your discord token, channel id and set this enabled true
 - Restart again and look in the console if more needed
 
 ## Proxy | and Bukkit/Spigot/Paper Server
@@ -17,7 +18,8 @@ You can send commands over discord to your Minecraft server or proxy.
 - And install the Coresystem: [https://github.com/Kleckzz/KleckzzCoreSystem](KleckzzCoreSystem)
 this is a dependency
 - Restart your servers to get the config
-- Setup in the Proxy the config.yml. In the proxy you have to insert your discord token and set this enabled true
+- Setup in the Proxy the config.yml 
+- In the proxy you have to insert your discord token, channelid and set this enabled true
 - Set on the Bukkit/Spigot/Paper Server a unique server name
 - Set on the Bukkit/Spigot/Paper Server the server port not the same as the other server
 - The Server address should be the same as the Client on the Bukkit/Spigot/Paper Server
