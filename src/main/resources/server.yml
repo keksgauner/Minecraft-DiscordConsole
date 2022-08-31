@@ -1,7 +1,5 @@
-# Set the setup to false if you're finished
-setup: true
 # The name of the server. How it should be listened.
 serverName: "server1"
 
 # Access token. Paste the token from Proxy here
-trusted-token: null
+trusted-token: "change"

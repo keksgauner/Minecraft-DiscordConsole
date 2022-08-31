@@ -22,12 +22,9 @@ public final class DiscordConsole extends JavaPlugin {
         config.saveDefaultConfig();
         plugin.getLogger().info("The config is loaded");
 
-        if(config.getConfig().getString("trusted-token", null) == null) {
-            plugin.getLogger().warning("Your trusted token is not setup. You have to copy the token from the proxy!");
-        }
-
-        if(config.getConfig().getBoolean("setup")) {
+        if(config.getConfig().getString("trusted-token", null).equals("change")) {
             plugin.getLogger().warning("You have to setup this plugin!");
+            plugin.getLogger().warning("Your trusted token is not setup. You have to copy the token from the proxy!");
         }
 
         plugin.getLogger().info("\u00A7aThe plugin DiscordConsole finished loading :)");

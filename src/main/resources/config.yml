@@ -1,10 +1,5 @@
-# Set the setup to false if you're finished
-setup: true
-# Set the discord token from https://discord.com/developers/applications
 discord:
   enabled: false
   token: "change me."
   watching: "The Servers"
-
-# Access token
-trusted-token: null
+trusted-token: "generate"

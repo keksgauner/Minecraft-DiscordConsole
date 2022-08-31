@@ -34,23 +34,23 @@ public final class DiscordConsole extends Plugin {
         config.saveDefaultConfig();
         plugin.getLogger().info("The config is loaded");
 
-        if(config.getConfig().getString("trusted-token", null) == null) {
-            plugin.getLogger().info("I'll create a trusted token for you!");
+        if(config.getConfig().getString("trusted-token").equals("generate")) {
+            plugin.getLogger().info("I'll create a trusted token just for you!");
             config.getConfig().set("trusted-token", generateToken());
             config.saveConfig();
         }
 
-        if(config.getConfig().getBoolean("setup")) {
+        if(config.getConfig().getBoolean("discord.enabled")) {
             plugin.getLogger().warning("You have to setup this plugin!");
             plugin.getLogger().warning("You have to insert the discord token from your bot in the DiscordConsole/config.json.");
-            plugin.getLogger().warning("Look to https://discord.com/developers/applications to get the token. Don't forget to set the setup to false!");
+            plugin.getLogger().warning("Look to https://discord.com/developers/applications to get the token. Don't forget to set the discord.enabled to true!");
         } else if(config.getConfig().getBoolean("discord.enabled")) {
             String token = config.getConfig().getString("discord.token");
             try {
                 startDiscordBot(token);
             } catch (LoginException | InterruptedException e) {
                 if(e.getMessage().contains("The provided token is invalid!")) {
-                    config.getConfig().set("setup", true);
+                    config.getConfig().set("discord.enabled", false);
                     config.saveConfig();
                     plugin.getLogger().warning("The provided token is invalid! I'll set setup to true");
                 }
