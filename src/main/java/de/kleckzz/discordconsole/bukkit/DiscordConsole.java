@@ -1,6 +1,7 @@
 package de.kleckzz.discordconsole.bukkit;
 
 import de.kleckzz.coresystem.bukkit.libraries.plugin.ConfigAccessor;
+import de.kleckzz.discordconsole.bukkit.socket.Socket;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @SuppressWarnings("unused")
@@ -19,8 +20,7 @@ public final class DiscordConsole extends JavaPlugin {
 
         loadConfig();
         if(checkTrustedToken()) {
-            plugin.getLogger().info("Say to the proxy hello!");
-            // TODO: setup client say hello
+            Socket.startClient(config.getConfig().getString("socket.client.address"), config.getConfig().getInt("socket.client.port"));
         }
 
         plugin.getLogger().info("\u00A7aThe plugin DiscordConsole finished loading :)");

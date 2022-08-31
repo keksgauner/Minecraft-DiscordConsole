@@ -4,6 +4,7 @@ import de.kleckzz.coresystem.proxy.libraries.plugin.ConfigAccessorBungee;
 import de.kleckzz.coresystem.proxy.libraries.plugin.channel.PluginChannelProxy;
 import de.kleckzz.discordconsole.bungee.discord.AutoCompleteBot;
 import de.kleckzz.discordconsole.bungee.discord.SlashInteraction;
+import de.kleckzz.discordconsole.bungee.socket.Socket;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -46,7 +47,8 @@ public final class DiscordConsole extends Plugin {
                 startDiscordBot(token);
 
                 // Add first server
-                AutoCompleteBot.addServer(config.getConfig().getString("serverName"));
+                AutoCompleteBot.addServer(new MinecraftServer(config.getConfig().getString("serverName"), config.getConfig().getString("socket.server.address"), config.getConfig().getInt("socket.server.port")));
+                startSocketServer();
             } catch (LoginException | InterruptedException e) {
                 if(e.getMessage().contains("The provided token is invalid!")) {
                     config.getConfig().set("discord.enabled", false);
@@ -59,6 +61,10 @@ public final class DiscordConsole extends Plugin {
 
         plugin.getLogger().info("\u00A7aThe plugin DiscordConsole finished loading :)");
 
+    }
+
+    private void startSocketServer() {
+        Socket.startServer(config.getConfig().getString("socket.server.address"), config.getConfig().getInt("socket.server.port"));
     }
 
     @Override

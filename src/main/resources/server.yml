@@ -7,8 +7,8 @@ socket:
   # By default, the port of the proxy
   client:
     address: "localhost"
-    port: 8081
+    port: 8080
   # By default a random port
   server:
     address: "localhost"
-    port: 0
+    port: 8081

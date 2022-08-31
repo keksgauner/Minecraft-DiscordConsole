@@ -1,5 +1,7 @@
 package de.kleckzz.discordconsole.bungee.discord;
 
+import de.kleckzz.discordconsole.bungee.DiscordConsole;
+import de.kleckzz.discordconsole.bungee.MinecraftServer;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.Command;
@@ -12,12 +14,16 @@ import java.util.stream.Stream;
 public class AutoCompleteBot extends ListenerAdapter {
     private static String[] server = new String[]{"none"};
 
-    private static ArrayList<String> serverList = new ArrayList<>();
+    private static ArrayList<MinecraftServer> serverList = new ArrayList<>();
 
-    public static void addServer(String serverName) {
-        serverList.add(serverName);
-        for(int i = 0; i < serverList.size(); i++) {
-            server[i] = serverList.get(i);
+    public static void addServer(MinecraftServer minecraftServer) {
+        if(!serverList.contains(minecraftServer)) {
+            serverList.add(minecraftServer);
+            // Change the String[] size
+            server = new String[serverList.size()];
+            for (int i = 0; i < serverList.size(); i++) {
+                server[i] = serverList.get(i).getServerName();
+            }
         }
     }
 

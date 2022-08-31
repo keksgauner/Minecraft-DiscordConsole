@@ -5,9 +5,6 @@ discord:
   watching: "The Servers"
 socket:
   trusted-token: "generate"
-  client:
-    address: "localhost"
-    port: 8080
   server:
     address: "localhost"
-    port: 8081
+    port: 8080
