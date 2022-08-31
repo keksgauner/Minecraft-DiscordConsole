@@ -3,6 +3,8 @@ discord:
   enabled: false
   token: "change me."
   watching: "The Servers"
+  # the id of the channel
+  channelID: ""
 # If you set this above true you can ignore the other stuff under this
 
 # The name of the server. How it should be listened.

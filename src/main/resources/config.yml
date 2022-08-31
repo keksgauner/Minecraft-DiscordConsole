@@ -3,6 +3,7 @@ discord:
   enabled: false
   token: "change me."
   watching: "The Servers"
+  channelID: ""
 socket:
   trusted-token: "generate"
   server:
