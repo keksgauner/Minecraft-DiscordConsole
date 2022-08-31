@@ -1,7 +1,9 @@
 package de.kleckzz.discordconsole.bungee;
 
 import de.kleckzz.coresystem.proxy.libraries.plugin.ConfigAccessorBungee;
+import de.kleckzz.coresystem.proxy.libraries.plugin.InitializeManager;
 import de.kleckzz.coresystem.proxy.libraries.plugin.channel.PluginChannelProxy;
+import de.kleckzz.discordconsole.bungee.channel.FindServer;
 import de.kleckzz.discordconsole.bungee.discord.AutoCompleteBot;
 import de.kleckzz.discordconsole.bungee.discord.SlashInteraction;
 import net.dv8tion.jda.api.JDA;
@@ -15,6 +17,8 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import javax.security.auth.login.LoginException;
+import java.io.IOException;
+import java.lang.instrument.IllegalClassFormatException;
 import java.security.SecureRandom;
 
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
@@ -98,6 +102,19 @@ public final class DiscordConsole extends Plugin {
         pluginChannelProxy = new PluginChannelProxy(plugin);
         pluginChannelProxy.registerOutgoingPluginChannel("dc:cmd");
         pluginChannelProxy.registerIncomingPluginChannel("dc:feedback");
+
+        InitializeManager.registerEvent(plugin, new FindServer());
+
+        searchServer();
+    }
+
+    private void searchServer() {
+        AutoCompleteBot.addServer(config.getConfig().getString("serverName"));
+        try {
+            FindServer.callServer();
+        } catch (IllegalClassFormatException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -125,19 +142,17 @@ public final class DiscordConsole extends Plugin {
 
         commands.addCommands(
                 Commands.slash("help", "Shows information about the bot")
-        );
+        ).queue();
 
         commands.addCommands(
                 Commands.slash("select", "Select the server")
                         .addOption(STRING, "server", "The name of the Server", true, true)
-        );
+        ).queue();
 
         commands.addCommands(
                 Commands.slash("send", "Send a command to the server")
                         .addOption(STRING, "command", "The command what should be to sent", true, false)
-        );
-
-        commands.queue();
+        ).queue();
     }
 
     private JDA buildDiscordBot(String token) throws LoginException {

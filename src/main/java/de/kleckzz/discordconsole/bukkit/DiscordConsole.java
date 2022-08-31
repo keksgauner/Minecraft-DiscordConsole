@@ -1,7 +1,9 @@
 package de.kleckzz.discordconsole.bukkit;
 
 import de.kleckzz.coresystem.bukkit.libraries.plugin.ConfigAccessor;
+import de.kleckzz.coresystem.bukkit.libraries.plugin.InitializeManager;
 import de.kleckzz.coresystem.bukkit.libraries.plugin.chanel.PluginChannelBukkit;
+import de.kleckzz.discordconsole.bukkit.channel.SayHello;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @SuppressWarnings("unused")
@@ -57,5 +59,7 @@ public final class DiscordConsole extends JavaPlugin {
         pluginChannelBukkit = new PluginChannelBukkit(plugin);
         pluginChannelBukkit.registerOutgoingPluginChannel("dc:feedback");
         pluginChannelBukkit.registerIncomingPluginChannel("dc:cmd");
+
+        InitializeManager.registerEvent(plugin, new SayHello());
     }
 }

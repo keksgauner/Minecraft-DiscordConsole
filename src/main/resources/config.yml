@@ -1,3 +1,4 @@
+serverName: "proxy"
 discord:
   enabled: false
   token: "change me."
