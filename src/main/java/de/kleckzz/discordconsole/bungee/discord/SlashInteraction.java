@@ -22,7 +22,7 @@ public class SlashInteraction extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        if(!event.getChannel().getId().equals(DiscordConsole.config.getConfig().getString("discord. channelID")))
+        if(!event.getChannel().getId().equals(DiscordConsole.config.getConfig().getString("discord.channelID")))
             return;
         Member member = Objects.requireNonNull(event.getMember());
         switch (event.getName()) {

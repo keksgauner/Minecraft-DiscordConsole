@@ -29,7 +29,7 @@ public class AutoCompleteBot extends ListenerAdapter {
 
     @Override
     public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
-        if(!event.getChannel().getId().equals(DiscordConsole.config.getConfig().getString("discord. channelID")))
+        if(!event.getChannel().getId().equals(DiscordConsole.config.getConfig().getString("discord.channelID")))
             return;
         if (event.getName().equals("select") && event.getFocusedOption().getName().equals("server")) {
             List<Command.Choice> options = Stream.of(server)
