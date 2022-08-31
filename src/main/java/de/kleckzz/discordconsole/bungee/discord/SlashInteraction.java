@@ -7,25 +7,30 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.awt.*;
 import java.time.Instant;
-import java.util.Objects;
 
 public class SlashInteraction extends ListenerAdapter {
+
+    public static String server;
+    public static String command;
+
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         switch (event.getName()) {
+            case "help":
+                event.reply("You can use the command /select [server] and /send [command]");
+                break;
             case "select":
-                event.deferReply()
-                        .queue();
-                event.getChannel().sendMessageEmbeds(
-                        getEmbed(Objects.requireNonNull(event.getMember()))
-                        .build())
-                        .queue();
+                server = event.getOption("server").getAsString();
+                event.reply("You selected server: " + server);
                 break;
             case "send":
+                command = event.getOption("command").getAsString();
+                event.reply("The command " + command + " was sent to the server " + server);
                 break;
         }
     }
 
+    @Deprecated
     private static EmbedBuilder getEmbed(Member member) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(Color.decode("#5865F2"));

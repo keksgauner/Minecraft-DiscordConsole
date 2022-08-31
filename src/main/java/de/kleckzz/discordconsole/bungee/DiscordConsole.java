@@ -122,10 +122,22 @@ public final class DiscordConsole extends Plugin {
     }
 
     private void slashCommandDiscordBot(CommandListUpdateAction commands) {
+
+        commands.addCommands(
+                Commands.slash("help", "Shows information about the bot")
+        );
+
         commands.addCommands(
                 Commands.slash("select", "Select the server")
                         .addOption(STRING, "server", "The name of the Server", true, true)
-        ).queue();
+        );
+
+        commands.addCommands(
+                Commands.slash("send", "Send a command to the server")
+                        .addOption(STRING, "command", "The command what should be to sent", true, false)
+        );
+
+        commands.queue();
     }
 
     private JDA buildDiscordBot(String token) throws LoginException {
