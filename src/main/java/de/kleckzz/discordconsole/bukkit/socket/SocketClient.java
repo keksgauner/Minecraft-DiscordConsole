@@ -22,8 +22,9 @@ public class SocketClient {
 
         String serverAddress = DiscordConsole.config.getConfig().getString("socket.server.address");
         int serverPort = DiscordConsole.config.getConfig().getInt("socket.server.port");
+        String token = DiscordConsole.config.getConfig().getString("socket.trusted-token");
 
-        String messageBuilder = "Hello!" + ";" + "TOKEN" + ";" + serverName + ";" + serverAddress + ";" + serverPort;
+        String messageBuilder = "Hello!" + ";" + token + ";" + serverName + ";" + serverAddress + ";" + serverPort;
 
         byte [] message = new String(messageBuilder).getBytes();
         ByteBuffer buffer = ByteBuffer.wrap(message);

@@ -19,7 +19,9 @@ public class SocketClient {
 
         DiscordConsole.plugin.getLogger().info("[" + threadName + "] Client... started.");
 
-        String messageBuilder = "Command!" + ";" + "TOKEN" + ";" + command;
+        String token = DiscordConsole.config.getConfig().getString("socket.trusted-token");
+
+        String messageBuilder = "Command!" + ";" + token + ";" + command;
 
         byte [] message = new String(messageBuilder).getBytes();
         ByteBuffer buffer = ByteBuffer.wrap(message);

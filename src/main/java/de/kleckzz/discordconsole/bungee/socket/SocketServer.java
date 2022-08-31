@@ -104,10 +104,12 @@ public class SocketServer {
         System.arraycopy(buffer.array(), 0, data, 0, numRead);
         DiscordConsole.plugin.getLogger().info("Got: " + new String(data));
         String[] message = new String(data).split(";");
-        if(message[0].equals("Hello!") && message[1].equals("TOKEN")) {
+
+        String token = DiscordConsole.config.getConfig().getString("socket.trusted-token");
+        if(message[0].equals("Hello!") && message[1].equals(token)) {
             AutoCompleteBot.addServer(new MinecraftServer(message[2], message[3], Integer.valueOf(message[4])));
         }
-        if(message[0].equals("Command!") && message[1].equals("TOKEN")) {
+        if(message[0].equals("Command!") && message[1].equals(token)) {
             CommandSender sender = DiscordConsole.plugin.getProxy().getConsole();
             Plugin plugin = DiscordConsole.plugin;
             ProxyServer.getInstance().getScheduler().runAsync(plugin, new Runnable() {

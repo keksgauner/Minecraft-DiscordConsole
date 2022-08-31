@@ -102,7 +102,8 @@ public class SocketServer {
         System.arraycopy(buffer.array(), 0, data, 0, numRead);
         DiscordConsole.plugin.getLogger().info("Got: " + new String(data));
         String[] message = new String(data).split(";");
-        if(message[0].equals("Command!") && message[1].equals("TOKEN")) {
+        String token = DiscordConsole.config.getConfig().getString("socket.trusted-token");
+        if(message[0].equals("Command!") && message[1].equals(token)) {
             CommandSender sender = DiscordConsole.plugin.getServer().getConsoleSender();
             Plugin plugin = DiscordConsole.plugin;
             Bukkit.getScheduler().runTask(plugin, new Runnable() {
