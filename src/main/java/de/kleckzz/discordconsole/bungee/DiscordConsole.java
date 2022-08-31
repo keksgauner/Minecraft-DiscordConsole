@@ -1,6 +1,7 @@
 package de.kleckzz.discordconsole.bungee;
 
 import de.kleckzz.coresystem.proxy.libraries.plugin.ConfigAccessorBungee;
+import de.kleckzz.coresystem.proxy.libraries.plugin.channel.PluginChannelProxy;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -16,6 +17,7 @@ public final class DiscordConsole extends Plugin {
 
     public static Plugin plugin;
     public static ConfigAccessorBungee config;
+    public static PluginChannelProxy pluginChannelProxy;
 
     // characters to use to build a token
     private static final String TOKEN_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -29,34 +31,29 @@ public final class DiscordConsole extends Plugin {
             plugin.getLogger().warning("You are running a development version of the plugin, please report any bugs to GitHub.");
         }
 
-        plugin.getLogger().info("I am loading the config. Please wait...");
-        config = new ConfigAccessorBungee(plugin, "config.yml");
-        config.saveDefaultConfig();
-        plugin.getLogger().info("The config is loaded");
+        loadConfig();
+        loadToken();
 
-        if(config.getConfig().getString("trusted-token").equals("generate")) {
-            plugin.getLogger().info("I'll create a trusted token just for you!");
-            config.getConfig().set("trusted-token", generateToken());
-            config.saveConfig();
-        }
-
-        if(config.getConfig().getBoolean("discord.enabled")) {
+        boolean discordEnabled = config.getConfig().getBoolean("discord.enabled");
+        if(!discordEnabled) {
             plugin.getLogger().warning("You have to setup this plugin!");
             plugin.getLogger().warning("You have to insert the discord token from your bot in the DiscordConsole/config.json.");
             plugin.getLogger().warning("Look to https://discord.com/developers/applications to get the token. Don't forget to set the discord.enabled to true!");
-        } else if(config.getConfig().getBoolean("discord.enabled")) {
-            String token = config.getConfig().getString("discord.token");
+        } else {
             try {
+                String token = config.getConfig().getString("discord.token");
                 startDiscordBot(token);
+                setupPluginChannel();
             } catch (LoginException | InterruptedException e) {
                 if(e.getMessage().contains("The provided token is invalid!")) {
                     config.getConfig().set("discord.enabled", false);
                     config.saveConfig();
-                    plugin.getLogger().warning("The provided token is invalid! I'll set setup to true");
+                    plugin.getLogger().warning("The provided token is invalid! I'll set discord.enabled to false");
                 }
                 throw new RuntimeException(e);
             }
         }
+
         plugin.getLogger().info("\u00A7aThe plugin DiscordConsole finished loading :)");
 
     }
@@ -78,6 +75,27 @@ public final class DiscordConsole extends Plugin {
             sb.append(TOKEN_CHARS.charAt(random.nextInt(TOKEN_CHARS.length())));
         }
         return sb.toString();
+    }
+
+    private void loadConfig() {
+        plugin.getLogger().info("I am loading the config. Please wait...");
+        config = new ConfigAccessorBungee(plugin, "config.yml");
+        config.saveDefaultConfig();
+        plugin.getLogger().info("The config is loaded");
+    }
+
+    private void loadToken() {
+        if(config.getConfig().getString("trusted-token").equals("generate")) {
+            plugin.getLogger().info("I'll create a trusted token just for you!");
+            config.getConfig().set("trusted-token", generateToken());
+            config.saveConfig();
+        }
+    }
+
+    private void setupPluginChannel() {
+        pluginChannelProxy = new PluginChannelProxy(plugin);
+        pluginChannelProxy.registerOutgoingPluginChannel("dc:cmd");
+        pluginChannelProxy.registerIncomingPluginChannel("dc:feedback");
     }
 
     private void startDiscordBot(String token) throws LoginException, InterruptedException {
