@@ -86,6 +86,7 @@ public final class DiscordConsole extends JavaPlugin {
     private boolean checkDiscordEnabled() {
         boolean discordEnabled = config.getConfig().getBoolean("discord.enabled");
         if(!discordEnabled) {
+            plugin.getLogger().warning("If you use the Proxy you can ignore that");
             plugin.getLogger().warning("You have to setup this plugin!");
             plugin.getLogger().warning("You have to insert the discord token from your bot in the DiscordConsole/config.json.");
             plugin.getLogger().warning("Look to https://discord.com/developers/applications to get the token. Don't forget to set the discord.enabled to true!");
