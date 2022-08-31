@@ -3,6 +3,9 @@ package de.kleckzz.discordconsole.bungee.socket;
 import de.kleckzz.discordconsole.bungee.DiscordConsole;
 import de.kleckzz.discordconsole.bungee.MinecraftServer;
 import de.kleckzz.discordconsole.bungee.discord.AutoCompleteBot;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -100,9 +103,20 @@ public class SocketServer {
         byte[] data = new byte[numRead];
         System.arraycopy(buffer.array(), 0, data, 0, numRead);
         DiscordConsole.plugin.getLogger().info("Got: " + new String(data));
-        String[] serverInfo = new String(data).split(";");
-        if(serverInfo[0].equals("Hello!")) {
-            AutoCompleteBot.addServer(new MinecraftServer(serverInfo[2], serverInfo[3], Integer.valueOf(serverInfo[4])));
+        String[] message = new String(data).split(";");
+        if(message[0].equals("Hello!") && message[1].equals("TOKEN")) {
+            AutoCompleteBot.addServer(new MinecraftServer(message[2], message[3], Integer.valueOf(message[4])));
+        }
+        if(message[0].equals("Command!") && message[1].equals("TOKEN")) {
+            CommandSender sender = DiscordConsole.plugin.getProxy().getConsole();
+            Plugin plugin = DiscordConsole.plugin;
+            ProxyServer.getInstance().getScheduler().runAsync(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    plugin.getLogger().info("Discord got to send command: " + message[2]);
+                    plugin.getProxy().getPluginManager().dispatchCommand(sender , message[2]);
+                }
+            });
         }
     }
 }

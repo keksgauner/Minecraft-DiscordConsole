@@ -17,13 +17,13 @@ public class Socket {
         };
         new Thread(server, "reportingServer").start();
     }
-    public static void startClient(String address, int port) {
+    public static void startClient(String address, int port, String command) {
         Runnable client = new Runnable() {
             @Override
             public void run() {
                 try {
                     Thread.sleep(5000);
-                    new SocketClient(address, port);
+                    new SocketClient(address, port, command);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {

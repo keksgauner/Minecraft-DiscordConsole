@@ -1,9 +1,15 @@
 package de.kleckzz.discordconsole.bungee.discord;
 
+import de.kleckzz.discordconsole.bungee.DiscordConsole;
+import de.kleckzz.discordconsole.bungee.MinecraftServer;
+import de.kleckzz.discordconsole.bungee.socket.Socket;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.Plugin;
 
 import java.awt.*;
 import java.time.Instant;
@@ -38,7 +44,23 @@ public class SlashInteraction extends ListenerAdapter {
                 }
                 command = Objects.requireNonNull(event.getOption("command")).getAsString();
 
-                // TODO: Send Command. and so on
+                if(server.equals(DiscordConsole.config.getConfig().getString("serverName"))) {
+                    CommandSender sender = DiscordConsole.plugin.getProxy().getConsole();
+                    Plugin plugin = DiscordConsole.plugin;
+                    ProxyServer.getInstance().getScheduler().runAsync(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                            plugin.getLogger().info("Discord got to send command: " + command);
+                            plugin.getProxy().getPluginManager().dispatchCommand(sender , command);
+                        }
+                    });
+                } else {
+                    for(MinecraftServer minecraftServer : AutoCompleteBot.serverList) {
+                        if(minecraftServer.getServerName().equals(server)) {
+                            Socket.startClient(minecraftServer.getServerAddress(), minecraftServer.getPort(), command);
+                        }
+                    }
+                }
 
                 event.replyEmbeds(
                         getEmbed(member, "The command " + command + " was sent to the server " + server)

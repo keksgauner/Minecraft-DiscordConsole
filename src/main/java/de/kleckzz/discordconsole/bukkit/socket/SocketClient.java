@@ -23,7 +23,7 @@ public class SocketClient {
         String serverAddress = DiscordConsole.config.getConfig().getString("socket.server.address");
         int serverPort = DiscordConsole.config.getConfig().getInt("socket.server.port");
 
-        String messageBuilder = "Hello!" + ";" + serverName + ";" + serverAddress + ";" + serverPort;
+        String messageBuilder = "Hello!" + ";" + "TOKEN" + ";" + serverName + ";" + serverAddress + ";" + serverPort;
 
         byte [] message = new String(messageBuilder).getBytes();
         ByteBuffer buffer = ByteBuffer.wrap(message);

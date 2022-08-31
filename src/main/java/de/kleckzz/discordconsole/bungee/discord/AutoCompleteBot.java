@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 public class AutoCompleteBot extends ListenerAdapter {
     private static String[] server = new String[]{"none"};
 
-    private static ArrayList<MinecraftServer> serverList = new ArrayList<>();
+    public static ArrayList<MinecraftServer> serverList = new ArrayList<>();
 
     public static void addServer(MinecraftServer minecraftServer) {
         if(!serverList.contains(minecraftServer)) {

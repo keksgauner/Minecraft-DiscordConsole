@@ -21,6 +21,7 @@ public final class DiscordConsole extends JavaPlugin {
         loadConfig();
         if(checkTrustedToken()) {
             Socket.startClient(config.getConfig().getString("socket.client.address"), config.getConfig().getInt("socket.client.port"));
+            Socket.startServer(config.getConfig().getString("socket.server.address"), config.getConfig().getInt("socket.server.port"));
         }
 
         plugin.getLogger().info("\u00A7aThe plugin DiscordConsole finished loading :)");
