@@ -10,11 +10,15 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import javax.security.auth.login.LoginException;
+import java.security.SecureRandom;
 
 public final class DiscordConsole extends Plugin {
 
     public static Plugin plugin;
     public static ConfigAccessorBungee config;
+
+    // characters to use to build a token
+    private static final String TOKEN_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     @Override
     public void onEnable() {
@@ -29,6 +33,12 @@ public final class DiscordConsole extends Plugin {
         config = new ConfigAccessorBungee(plugin, "config.yml");
         config.saveDefaultConfig();
         plugin.getLogger().info("The config is loaded");
+
+        if(config.getConfig().getString("trusted-token", null) == null) {
+            plugin.getLogger().info("I'll create a trusted token for you!");
+            config.getConfig().set("trusted-token", generateToken());
+            config.saveConfig();
+        }
 
         if(config.getConfig().getBoolean("setup")) {
             plugin.getLogger().warning("You have to setup this plugin!");
@@ -54,6 +64,20 @@ public final class DiscordConsole extends Plugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    /**
+     * Randomly generates a new token
+     *
+     * @return a new token
+     */
+    private static String generateToken() {
+        StringBuilder sb = new StringBuilder();
+        SecureRandom random = new SecureRandom();
+        for (int i = 0; i < 64; i++) {
+            sb.append(TOKEN_CHARS.charAt(random.nextInt(TOKEN_CHARS.length())));
+        }
+        return sb.toString();
     }
 
     private void startDiscordBot(String token) throws LoginException, InterruptedException {

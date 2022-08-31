@@ -5,3 +5,6 @@ discord:
   enabled: false
   token: "change me."
   watching: "The Servers"
+
+# Access token
+trusted-token: null

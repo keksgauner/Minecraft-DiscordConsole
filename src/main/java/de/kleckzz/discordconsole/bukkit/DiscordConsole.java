@@ -3,6 +3,7 @@ package de.kleckzz.discordconsole.bukkit;
 import de.kleckzz.coresystem.bukkit.libraries.plugin.ConfigAccessor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@SuppressWarnings("unused")
 public final class DiscordConsole extends JavaPlugin {
 
     public static JavaPlugin plugin;
@@ -21,7 +22,11 @@ public final class DiscordConsole extends JavaPlugin {
         config.saveDefaultConfig();
         plugin.getLogger().info("The config is loaded");
 
-        if(config.getConfig().getBoolean("setup") == true) {
+        if(config.getConfig().getString("trusted-token", null) == null) {
+            plugin.getLogger().warning("Your trusted token is not setup. You have to copy the token from the proxy!");
+        }
+
+        if(config.getConfig().getBoolean("setup")) {
             plugin.getLogger().warning("You have to setup this plugin!");
         }
 
@@ -32,28 +37,5 @@ public final class DiscordConsole extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-    }
-
-
-    private void setConfig() {
-
-        /*
-        // Discord path
-        fileConfiguration.set("discord.enabled", "false");
-        fileConfiguration.set("discord.token", "no-token");
-
-
-        // Socket path | Server
-        fileConfiguration.set("socket.server.enabled", "false");
-        fileConfiguration.set("socket.server.address", "localhost");
-        fileConfiguration.set("socket.server.port", "8080");
-
-        // Socket path | CLIENT
-        fileConfiguration.set("socket.client.enabled", "false");
-        fileConfiguration.set("socket.client.address", "localhost");
-        fileConfiguration.set("socket.client.port", "8081");
-
-        plugin.getConfig().setDefaults(fileConfiguration);
-        plugin.saveConfig();*/
     }
 }
