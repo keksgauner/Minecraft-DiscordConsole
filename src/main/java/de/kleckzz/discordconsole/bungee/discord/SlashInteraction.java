@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class SlashInteraction extends ListenerAdapter {
 
-    public static String server;
+    public static String server = null;
     public static String command;
 
     @Override
@@ -30,7 +30,16 @@ public class SlashInteraction extends ListenerAdapter {
                                 .build()).queue();
                 break;
             case "send":
+                if(server == null) {
+                    event.replyEmbeds(
+                            getEmbed(member, "Select first your server!")
+                                    .build()).queue();
+                    return;
+                }
                 command = Objects.requireNonNull(event.getOption("command")).getAsString();
+
+                // Send Command. and so on
+
                 event.replyEmbeds(
                         getEmbed(member, "The command " + command + " was sent to the server " + server)
                         .build()).queue();

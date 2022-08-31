@@ -50,9 +50,9 @@ public final class DiscordConsole extends JavaPlugin {
         if(config.getConfig().getString("trusted-token").equals("change")) {
             plugin.getLogger().warning("You have to setup this plugin!");
             plugin.getLogger().warning("Your trusted token is not setup. You have to copy the token from the proxy!");
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     private void setupPluginChannel() {
