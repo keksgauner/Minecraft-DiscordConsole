@@ -5,13 +5,17 @@ import de.kleckzz.coresystem.proxy.libraries.plugin.channel.PluginChannelProxy;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import javax.security.auth.login.LoginException;
 import java.security.SecureRandom;
+
+import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 public final class DiscordConsole extends Plugin {
 
@@ -34,12 +38,7 @@ public final class DiscordConsole extends Plugin {
         loadConfig();
         loadToken();
 
-        boolean discordEnabled = config.getConfig().getBoolean("discord.enabled");
-        if(!discordEnabled) {
-            plugin.getLogger().warning("You have to setup this plugin!");
-            plugin.getLogger().warning("You have to insert the discord token from your bot in the DiscordConsole/config.json.");
-            plugin.getLogger().warning("Look to https://discord.com/developers/applications to get the token. Don't forget to set the discord.enabled to true!");
-        } else {
+        if(checkDiscordEnabled()) {
             try {
                 String token = config.getConfig().getString("discord.token");
                 startDiscordBot(token);
@@ -98,7 +97,23 @@ public final class DiscordConsole extends Plugin {
         pluginChannelProxy.registerIncomingPluginChannel("dc:feedback");
     }
 
+    /**
+     * Check if discord enabled
+     * @return if the discord enabled
+     */
+    private boolean checkDiscordEnabled() {
+        boolean discordEnabled = config.getConfig().getBoolean("discord.enabled");
+        if(!discordEnabled) {
+            plugin.getLogger().warning("You have to setup this plugin!");
+            plugin.getLogger().warning("You have to insert the discord token from your bot in the DiscordConsole/config.json.");
+            plugin.getLogger().warning("Look to https://discord.com/developers/applications to get the token. Don't forget to set the discord.enabled to true!");
+            return false;
+        }
+        return true;
+    }
+
     private void startDiscordBot(String token) throws LoginException, InterruptedException {
+        // Bot config
         JDABuilder builder = JDABuilder.createDefault(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.MESSAGE_CONTENT);
 
         builder.disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER);
@@ -109,7 +124,18 @@ public final class DiscordConsole extends Plugin {
 
         builder.addEventListeners(new DiscordEvents());
 
+        // JDA
         JDA jda = builder.build();
         jda.awaitReady();
+
+        // Slash command
+        CommandListUpdateAction commands = jda.updateCommands();
+
+        commands.addCommands(
+                Commands.slash("select", "Select the server")
+                        .addOption(STRING, "server", "The name of the Server", false)
+                        .setGuildOnly(true)
+        );
+        commands.queue();
     }
 }
