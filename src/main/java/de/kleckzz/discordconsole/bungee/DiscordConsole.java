@@ -2,6 +2,8 @@ package de.kleckzz.discordconsole.bungee;
 
 import de.kleckzz.coresystem.proxy.libraries.plugin.ConfigAccessorBungee;
 import de.kleckzz.coresystem.proxy.libraries.plugin.channel.PluginChannelProxy;
+import de.kleckzz.discordconsole.bungee.discord.AutoCompleteBot;
+import de.kleckzz.discordconsole.bungee.discord.SlashInteraction;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -40,6 +42,7 @@ public final class DiscordConsole extends Plugin {
 
         if(checkDiscordEnabled()) {
             try {
+                plugin.getLogger().info("Starting Discord Bot...");
                 String token = config.getConfig().getString("discord.token");
                 startDiscordBot(token);
                 setupPluginChannel();
@@ -113,7 +116,19 @@ public final class DiscordConsole extends Plugin {
     }
 
     private void startDiscordBot(String token) throws LoginException, InterruptedException {
-        // Bot config
+        JDA jda = buildDiscordBot(token);
+        jda.awaitReady();
+        slashCommandDiscordBot(jda.updateCommands());
+    }
+
+    private void slashCommandDiscordBot(CommandListUpdateAction commands) {
+        commands.addCommands(
+                Commands.slash("select", "Select the server")
+                        .addOption(STRING, "server", "The name of the Server", true, true)
+        ).queue();
+    }
+
+    private JDA buildDiscordBot(String token) throws LoginException {
         JDABuilder builder = JDABuilder.createDefault(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.MESSAGE_CONTENT);
 
         builder.disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER);
@@ -123,19 +138,9 @@ public final class DiscordConsole extends Plugin {
         builder.setActivity(Activity.watching(config.getConfig().getString("discord.watching")));
 
         builder.addEventListeners(new DiscordEvents());
+        builder.addEventListeners(new AutoCompleteBot());
+        builder.addEventListeners(new SlashInteraction());
 
-        // JDA
-        JDA jda = builder.build();
-        jda.awaitReady();
-
-        // Slash command
-        CommandListUpdateAction commands = jda.updateCommands();
-
-        commands.addCommands(
-                Commands.slash("select", "Select the server")
-                        .addOption(STRING, "server", "The name of the Server", false)
-                        .setGuildOnly(true)
-        );
-        commands.queue();
+        return builder.build();
     }
 }
