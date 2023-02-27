@@ -5,6 +5,3 @@ api-version: 1.13
 author: Keksgauner
 description: You are able to send commands to the server
 website: www.kleckzz.de
-
-depend:
-  - Coresystem
