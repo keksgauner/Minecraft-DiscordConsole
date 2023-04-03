@@ -4,6 +4,3 @@ main: de.kleckzz.discordconsole.bungee.DiscordConsole
 author: Keksgauner
 description: You are able to send commands to the server
 website: www.kleckzz.de
-
-depends:
-  - Coresystem
