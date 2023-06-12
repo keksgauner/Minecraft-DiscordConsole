@@ -37,3 +37,5 @@ Here you can see the command was sent
 
 # Preview (outdated)
 ![image](https://cloud.rakutt.eu/s/TYJ9pZnNy5i3SXa/preview)
+
+outdated since 12.06.2023
